@@ -23,34 +23,23 @@ namespace ImageProcessing
 {
     public class PixImage
     {
-        /// <summary>
-        ///  Define any variables associated with a PixImage object here.  These
-        ///  variables MUST be private.
-        /// </summary>\
+        // image object
         private class Pixel
         {
             public short red;
             public short green;
             public short blue;
         }
-
         private int width;
         private int height;
         private Pixel[,] myImage;
-
-        /// <summary>
-        /// PixImage() constructs an empty PixImage with a specified width and height.
-        /// Every pixel has red, green, and blue intensities of zero (solid black).
-        /// </summary>
-        /// <param name="width"> the width of the image. </param>
-        /// <param name="height"> the height of the image. </param>
+        // creates myImage object with given width and height, and all pixels set to 0,0,0 (black)
         public PixImage(int width, int height)
         {
-            // Your solution here.
             this.width = width;
             this.height = height;
+            // creates new myImage
             this.myImage = new Pixel[width, height];
-
             for(int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -59,212 +48,137 @@ namespace ImageProcessing
                 }
             }
         }
-
-        /// <summary>
-        /// returns the width of the image.
-        /// </summary>
+        // returns the width of the image.
         public virtual int Width
         {
             get
             {
-                // Replace the following line with your solution.
                 return this.width;
             }
         }
-
-        /// <summary>
-        /// returns the height of the image.
-        /// </summary>
+        // returns the height of the image.
         public virtual int Height
         {
             get
             {
-                // Replace the following line with your solution.
                 return this.height;
             }
         }
-
-        /// <summary>
-        /// getRed() returns the red intensity of the pixel at coordinate (x, y).
-        /// </summary>
-        /// <param name="x"> the x-coordinate of the pixel. </param>
-        /// <param name="y"> the y-coordinate of the pixel. </param>
-        /// <returns> the red intensity of the pixel at coordinate (x, y). </returns>
+        // returns the red intensity of the pixel at coordinate (x, y).
         public virtual short getRed(int x, int y)
         {
-            // Replace the following line with your solution.
             return myImage[x, y].red;
         }
-
-        /// <summary>
-        /// getGreen() returns the green intensity of the pixel at coordinate (x, y).
-        /// </summary>
-        /// <param name="x"> the x-coordinate of the pixel. </param>
-        /// <param name="y"> the y-coordinate of the pixel. </param>
-        /// <returns> the green intensity of the pixel at coordinate (x, y). </returns>
+        // does the same for green
         public virtual short getGreen(int x, int y)
         {
-            // Replace the following line with your solution.
             return myImage[x, y].green;
         }
-
-        /// <summary>
-        /// getBlue() returns the blue intensity of the pixel at coordinate (x, y).
-        /// </summary>
-        /// <param name="x"> the x-coordinate of the pixel. </param>
-        /// <param name="y"> the y-coordinate of the pixel. </param>
-        /// <returns> the blue intensity of the pixel at coordinate (x, y). </returns>
+        // does the same for blue
         public virtual short getBlue(int x, int y)
         {
-            // Replace the following line with your solution.
             return myImage[x, y].blue;
         }
-        /// <summary>
-        /// setPixel() sets the pixel at coordinate (x, y) to specified red, green,
-        /// and blue intensities.
-        ///   
-        /// If any of the three color intensities is NOT in the range 0...255, then
-        /// this method does NOT change any of the pixel intensities.
-        /// </summary>
-        /// <param name="x"> the x-coordinate of the pixel. </param>
-        /// <param name="y"> the y-coordinate of the pixel. </param>
-        /// <param name="red"> the new red intensity for the pixel at coordinate (x, y). </param>
-        /// <param name="green"> the new green intensity for the pixel at coordinate (x, y). </param>
-        /// <param name="blue"> the new blue intensity for the pixel at coordinate (x, y). </param>
+        // sets the pixel at coordinate (x, y) to specified red, green, or blue value
         public virtual void setPixel(int x, int y, short red, short green, short blue)
         {
-            // Your solution here.
             if (myImage[x, y] == null)
-            {
+            {   
+                // if no values are passed, then no values are changed
                 myImage[x, y] = new Pixel();
             }
+            // selects the color at a given location, sets it equal to the new value passed in as a parameter
             this.myImage[x, y].red = red;
             this.myImage[x, y].green = green;
             this.myImage[x, y].blue = blue;
         }
 
-        /// <summary>
-        /// toString() returns a String representation of this PixImage.
-        /// 
-        /// This method isn't required, but it should be very useful to you when
-        /// you're debugging your code.  It's up to you how you represent a PixImage
-        /// as a String.
-        /// </summary>
-        /// <returns> a String representation of this PixImage. </returns>
-        public override string ToString()
-        {
-            // Replace the following line with your solution.
-            StringBuilder sb = new StringBuilder();
+        // returns a String representation of 'this' PixImage.  Not used in implementation, for debugging only.
+        //public override string ToString()
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    for(int y = 0; y < height; y++)
+        //    {
+        //        for(int x = 0; x < width; x++)
+        //        {
+        //            sb.Append(myImage[x, y].red.ToString() + ":" + myImage[x, y].green.ToString() + ":" + myImage[x, y].blue.ToString() + "\n");
+        //        }
+        //    }
+        //    return sb.ToString();
+        //}
 
-            for(int y = 0; y < height; y++)
-            {
-                for(int x = 0; x < width; x++)
-                {
-                    sb.Append(myImage[x, y].red.ToString() + ":" + myImage[x, y].green.ToString() + ":" + myImage[x, y].blue.ToString() + "\n");
-                }
-            }
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// boxBlur() returns a blurred version of "this" PixImage.
-        /// 
-        /// If numIterations == 1, each pixel in the output PixImage is assigned
-        /// a value equal to the average of its neighboring pixels in "this" PixImage,
-        /// INCLUDING the pixel itself.
-        /// 
-        /// A pixel not on the image boundary has nine neighbors--the pixel itself and
-        /// the eight pixels surrounding it.  A pixel on the boundary has six
-        /// neighbors if it is not a corner pixel; only four neighbors if it is
-        /// a corner pixel.  The average of the neighbors is the sum of all the
-        /// neighbor pixel values (including the pixel itself) divided by the number
-        /// of neighbors, with non-integer quotients rounded toward zero (as C# does
-        /// naturally when you divide two integers).
-        /// 
-        /// Each color (red, green, blue) is blurred separately.  The red input should
-        /// have NO effect on the green or blue outputs, etc.
-        /// 
-        /// The parameter numIterations specifies a number of repeated iterations of
-        /// box blurring to perform.  If numIterations is zero or negative, "this"
-        /// PixImage is returned (not a copy).  If numIterations is positive, the
-        /// return value is a newly constructed PixImage.
-        /// 
-        /// IMPORTANT:  DO NOT CHANGE "this" PixImage!!!  All blurring/changes should
-        /// appear in the new, output PixImage only.
-        /// </summary>
-        /// <param name="numIterations"> the number of iterations of box blurring. </param>
-        /// <returns> a blurred version of "this" PixImage. </returns>
         private Pixel getBlurValue(PixImage img, int x, int y)
         {
+            // create new image to work on
             Pixel blurP = new Pixel();
-            //ID the neighbors
+            // ID the neighbors:
+            // set range start for x values
             int startx = (x - 1 != -1) ? x - 1 : x;
+            // set range start for y values
             int starty = (y - 1 != -1) ? y - 1 : y;
+            // set range end for x values
             int endx = (x + 1 < width) ? x + 1 : x;
+            // set range end for y values
             int endy = (y + 1 < height) ? y + 1 : y;
+            // set these to zero to begin
             int counter = 0;
             int redTotal = 0;
             int greenTotal = 0;
             int blueTotal = 0;
-
+            // for each pixel, work through the array
             for(int i = starty; i <= endy; i++)
             {
                 for(int j = startx; j <= endx; j++)
                 {
+                    // add the color value to the running total
                     redTotal += img.myImage[j, i].red;
                     greenTotal += img.myImage[j, i].green;
                     blueTotal += img.myImage[j, i].blue;
+                    // iterate the counter
                     counter++;
                 }
             }
+            // average the color values
             blurP.red = Convert.ToInt16(redTotal / counter);
             blurP.green = Convert.ToInt16(greenTotal / counter);
             blurP.blue = Convert.ToInt16(blueTotal / counter);
-
+            // return the averaged color values
             return blurP;
         }
-
         public virtual PixImage boxBlur(int numIterations)
         {
+            // if no blur iterations are wanted, abort and return the image as-is
             if (numIterations <= 0) return this;
-
+            // save the original image before messing with it
             PixImage prevBlur = this;
-
-            // loop thru iterations
+            // loop thru iterations as set by passed-in parameter
             for(int i = 0; i < numIterations; i++)
             {
+                // create a new image for the blur loop to write to
                 PixImage blurImage = new PixImage(width, height);
-                // loop thru pixels
+                // loop thru every pixel
                 for(int y = 0; y < height; y++)
                 {
                     for(int x = 0; x < width; x++)
                     {
+                        // this function is defined above - it averages color values, which dictate how to blur the pixel
                         Pixel bPixel = getBlurValue(prevBlur, x, y);
+                        // set new pixel values to match the blur values
                         blurImage.setPixel(x, y, bPixel.red, bPixel.green, bPixel.blue);
                     }
                 }
+                // sets the newly created blur image to the previous image, so if we loop again we will blur again, not re-blur the original iamge
                 prevBlur = blurImage;
             }
+            // return the blurred image after all iterations have run
             return prevBlur;
         }
 
-        /// <summary>
-        /// mag2gray() maps an energy (squared vector magnitude) in the range
-        /// 0...24,969,600 to a grayscale intensity in the range 0...255.  The map
-        /// is logarithmic, but shifted so that values of 5,080 and below map to zero.
-        /// 
-        /// DO NOT CHANGE THIS METHOD.  If you do, you will not be able to get the
-        /// correct images and pass the autograder.
-        /// </summary>
-        /// <param name="mag"> the energy (squared vector magnitude) of the pixel whose
-        /// intensity we want to compute. </param>
-        /// <returns> the intensity of the output pixel. </returns>
+        // this method came as-is and was not changed. It shifts the image to grayscale and restricts the value range to 0-255 (rgb)
         private static short mag2gray(long mag)
         {
             short intensity = (short)(30.0 * Math.Log(1.0 + (double)mag) - 256.0);
-
-            // Make sure the returned intensity is in the range 0...255, regardless of
-            // the input value.
+            // Make sure the returned intensity is in the range 0...255, regardless of the input value.
             if (intensity < 0)
             {
                 intensity = 0;
@@ -290,71 +204,86 @@ namespace ImageProcessing
         /// </summary>
         /// <returns> a grayscale PixImage representing the edges of the input image.
         /// Whiter pixels represent stronger edges. </returns>
-        
+        /// 
+
+        // Matrix is the matrix used in the Sobol filter
+        private long[] getGradValue(int[,] Matrix, int x, int y)
+        {
+            long red = 0;
+            long green = 0;
+            long blue = 0;
+            // create array to store rgb values
+            long[] pixel = new long[3];
+            // set x and y value ranges
+            int startx = (x - 1 != -1) ? x - 1 : x;
+            int starty = (y - 1 != -1) ? y - 1 : y;
+            int endx = (x + 1 < width) ? x + 1 : x;
+            int endy = (y + 1 < width) ? y + 1 : y;
+            // loop through the pixels, and through the Matrix matrix
+            for (int i = startx, l = 0; i <= endx; i++, l++)
+            {
+                for (int j = starty, m = 0; j <= endy; j++, m++)
+                {
+                    red = red + (Matrix[l, m] * this.myImage[i, j].red);
+                    green = green + (Matrix[l, m] * this.myImage[i, j].green);
+                    blue = blue + (Matrix[l, m] * this.myImage[i, j].blue);
+                }
+            }
+            // store the rgb values in the array created above. Instead of averaging the color values, 
+            // we want to see how different the color value is from it's neighbor so we can judge the strength of the edge:
+            // a large difference equals a strong edge (large change in color value), while a small difference equals 
+            // a weak edge (no change in color value)
+            pixel[0] = red;
+            pixel[1] = green;
+            pixel[2] = blue;
+            // return the array
+            return pixel;
+        }
+
         public virtual PixImage sobelEdges()
         {
-            // Don't forget to use the method mag2gray() above to convert energies to
-            // pixel intensities.
+            // create new image to work with
             PixImage img = new PixImage(width, height);
-            int[,] xCalMat =
+            // these are the matrices used by the Sobel filter (from https://en.wikipedia.org/wiki/Sobel_operator#Formulation)
+            int[,] xMatrix =
             {
                 {1, 0, -1 },
                 {2, 0, -2 },
                 {1, 0, -1 }
             };
-            int[,] yCalMat =
+            int[,] yMatrix =
             {
                 {1, 2, 1 },
                 {0, 0, 0 },
                 {-1, -2, -1 }
             };
-
+            // x result after the filter
             long[] gx;
+            // y result after the filter
             long[] gy;
+            // energy is calculated by summing the squares of each color value gradient for the pixel (both x and y); 
+            // that value is specific to each pixel
             long[,] energy = new long[width, height];
-
+            // loop through the pixels
             for(int x = 0; x < width; x++)
             {
                 for(int y =0; y < height; y++)
                 {
-                    gx = getGradValue(xCalMat, x, y);
-                    gy = getGradValue(yCalMat, x, y);
-
+                    // get the gradient values for x and y for each pixel
+                    gx = getGradValue(xMatrix, x, y);
+                    gy = getGradValue(yMatrix, x, y);
+                    // calculate the energy for the pixel
                     energy[x, y] = (gx[0] * gx[0]) + (gy[0] * gy[0]) + (gx[1] * gx[1]) + (gy[1] * gy[1]) + (gx[2] * gx[2]) + (gy[2] * gy[2]);
+                    // set the pixel values by converting energy to grayscale (r=g=b) using the given method mag2gray 
                     img.setPixel(x, y, mag2gray(energy[x, y]), mag2gray(energy[x, y]), mag2gray(energy[x, y]));
                 }
             }
+            // return the image
             return img;
         }
 
-        private long[] getGradValue(int[,] CalMat, int x, int y)
-        {
-            long red = 0;
-            long green = 0;
-            long blue = 0;
-            long[] pixel = new long[3];
-
-            int startx = (x - 1 != -1) ? x - 1 : x;
-            int starty = (y - 1 != -1) ? y - 1 : y;
-            int endx = (x + 1 < width) ? x + 1 : x;
-            int endy = (y + 1 < width) ? y + 1 : y;
-
-            for (int i = startx, l = 0; i <= endx; i++, l++)
-            {
-                for (int j = starty, m = 0; j <= endy; j++, m++)
-                {
-                    red = red + (CalMat[l, m] * this.myImage[i, j].red);
-                    green = green + (CalMat[l, m] * this.myImage[i, j].green);
-                    blue = blue + (CalMat[l, m] * this.myImage[i, j].blue);
-                }
-            }
-            pixel[0] = red;
-            pixel[1] = green;
-            pixel[2] = blue;
-
-            return pixel;
-        }
-
+        
+        // CODE BELOW THIS POINT CAME AS-IS AND WAS NOT CHANGED OR USED
 
         /// <summary>
         /// TEST CODE:  YOU DO NOT NEED TO FILL IN ANY METHODS BELOW THIS POINT.
@@ -500,6 +429,8 @@ namespace ImageProcessing
         new int[] {122, 143, 74},
         new int[] {74, 143, 122}
             })), "Incorrect Sobel:\n" + image2.sobelEdges());
+
+            Console.ReadLine();
         }
 
     }
