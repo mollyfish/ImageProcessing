@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +21,12 @@ using System.Threading.Tasks;
 
 namespace ImageProcessing
 {
-
     public class PixImage
     {
+        /// <summary>
+        ///  Define any variables associated with a PixImage object here.  These
+        ///  variables MUST be private.
+        /// </summary>\
         private class Pixel
         {
             public short red;
@@ -31,11 +34,6 @@ namespace ImageProcessing
             public short blue;
         }
 
-        /// <summary>
-        ///  Define any variables associated with a PixImage object here.  These
-        ///  variables MUST be private.
-        /// </summary>
-        //private static readonly byte[] imageBuffer = new byte[102400];
         private int width;
         private int height;
         private Pixel[,] myImage;
@@ -48,13 +46,14 @@ namespace ImageProcessing
         /// <param name="height"> the height of the image. </param>
         public PixImage(int width, int height)
         {
+            // Your solution here.
             this.width = width;
             this.height = height;
             this.myImage = new Pixel[width, height];
 
             for(int y = 0; y < height; y++)
             {
-                for(int x = 0; x < width; x++)
+                for (int x = 0; x < width; x++)
                 {
                     setPixel(x, y, 0, 0, 0);
                 }
@@ -118,7 +117,7 @@ namespace ImageProcessing
         public virtual short getBlue(int x, int y)
         {
             // Replace the following line with your solution.
-            return myImage[x,y].blue;
+            return myImage[x, y].blue;
         }
         /// <summary>
         /// setPixel() sets the pixel at coordinate (x, y) to specified red, green,
@@ -134,15 +133,14 @@ namespace ImageProcessing
         /// <param name="blue"> the new blue intensity for the pixel at coordinate (x, y). </param>
         public virtual void setPixel(int x, int y, short red, short green, short blue)
         {
-            if (myImage[x,y] == null)
+            // Your solution here.
+            if (myImage[x, y] == null)
             {
                 myImage[x, y] = new Pixel();
             }
-
             this.myImage[x, y].red = red;
             this.myImage[x, y].green = green;
             this.myImage[x, y].blue = blue;
-
         }
 
         /// <summary>
@@ -155,11 +153,12 @@ namespace ImageProcessing
         /// <returns> a String representation of this PixImage. </returns>
         public override string ToString()
         {
+            // Replace the following line with your solution.
             StringBuilder sb = new StringBuilder();
 
-            for (int y = 0; y < height; y++)
+            for(int y = 0; y < height; y++)
             {
-                for (int x = 0; x < width; x++)
+                for(int x = 0; x < width; x++)
                 {
                     sb.Append(myImage[x, y].red.ToString() + ":" + myImage[x, y].green.ToString() + ":" + myImage[x, y].blue.ToString() + "\n");
                 }
@@ -195,46 +194,22 @@ namespace ImageProcessing
         /// </summary>
         /// <param name="numIterations"> the number of iterations of box blurring. </param>
         /// <returns> a blurred version of "this" PixImage. </returns>
-        public virtual PixImage boxBlur(int numIterations)
-        {
-            if (numIterations <= 0) return this;
-
-            PixImage prevBlur = this;
-
-            // How much Blur?
-            for (int i = 0; i < numIterations; i++)
-            {
-                PixImage blurImage = new PixImage(width, height);
-                // Go through each pixel
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        // Get Blur Value
-                        Pixel bPixel = getBlurValue(prevBlur, x,y);
-                        
-                        blurImage.setPixel(x, y, bPixel.red, bPixel.green, bPixel.blue);
-                    }
-                }
-                prevBlur = blurImage;
-            }
-            return prevBlur;
-        }
-
         private Pixel getBlurValue(PixImage img, int x, int y)
         {
             Pixel blurP = new Pixel();
-
-            // Find the neighbours, keep track of corner cases and border cases
+            //ID the neighbors
             int startx = (x - 1 != -1) ? x - 1 : x;
             int starty = (y - 1 != -1) ? y - 1 : y;
             int endx = (x + 1 < width) ? x + 1 : x;
             int endy = (y + 1 < height) ? y + 1 : y;
-            int counter = 0, redTotal = 0, greenTotal = 0, blueTotal = 0 ;
+            int counter = 0;
+            int redTotal = 0;
+            int greenTotal = 0;
+            int blueTotal = 0;
 
-            for (int i = starty; i <= endy; i++)
+            for(int i = starty; i <= endy; i++)
             {
-                for (int j = startx; j <= endx; j++)
+                for(int j = startx; j <= endx; j++)
                 {
                     redTotal += img.myImage[j, i].red;
                     greenTotal += img.myImage[j, i].green;
@@ -242,7 +217,6 @@ namespace ImageProcessing
                     counter++;
                 }
             }
-
             blurP.red = Convert.ToInt16(redTotal / counter);
             blurP.green = Convert.ToInt16(greenTotal / counter);
             blurP.blue = Convert.ToInt16(blueTotal / counter);
@@ -250,6 +224,29 @@ namespace ImageProcessing
             return blurP;
         }
 
+        public virtual PixImage boxBlur(int numIterations)
+        {
+            if (numIterations <= 0) return this;
+
+            PixImage prevBlur = this;
+
+            // loop thru iterations
+            for(int i = 0; i < numIterations; i++)
+            {
+                PixImage blurImage = new PixImage(width, height);
+                // loop thru pixels
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        Pixel bPixel = getBlurValue(prevBlur, x, y);
+                        blurImage.setPixel(x, y, bPixel.red, bPixel.green, bPixel.blue);
+                    }
+                }
+                prevBlur = blurImage;
+            }
+            return prevBlur;
+        }
 
         /// <summary>
         /// mag2gray() maps an energy (squared vector magnitude) in the range
@@ -293,9 +290,11 @@ namespace ImageProcessing
         /// </summary>
         /// <returns> a grayscale PixImage representing the edges of the input image.
         /// Whiter pixels represent stronger edges. </returns>
+        
         public virtual PixImage sobelEdges()
         {
-            //return this;
+            // Don't forget to use the method mag2gray() above to convert energies to
+            // pixel intensities.
             PixImage img = new PixImage(width, height);
             int[,] xCalMat =
             {
@@ -303,7 +302,6 @@ namespace ImageProcessing
                 {2, 0, -2 },
                 {1, 0, -1 }
             };
-
             int[,] yCalMat =
             {
                 {1, 2, 1 },
@@ -311,36 +309,35 @@ namespace ImageProcessing
                 {-1, -2, -1 }
             };
 
-            long[] gx, gy;
+            long[] gx;
+            long[] gy;
             long[,] energy = new long[width, height];
 
-            for (int x = 0; x < width; x++)
+            for(int x = 0; x < width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for(int y =0; y < height; y++)
                 {
-                    // Get the gradient value
                     gx = getGradValue(xCalMat, x, y);
                     gy = getGradValue(yCalMat, x, y);
-                    //     energy(x, y) = gx(red)^2 + gy(red)^2 + gx(green)^2 + gy(green)^2 +  gx(blue)^2 + gy(blue)^2. 
+
                     energy[x, y] = (gx[0] * gx[0]) + (gy[0] * gy[0]) + (gx[1] * gx[1]) + (gy[1] * gy[1]) + (gx[2] * gx[2]) + (gy[2] * gy[2]);
                     img.setPixel(x, y, mag2gray(energy[x, y]), mag2gray(energy[x, y]), mag2gray(energy[x, y]));
                 }
             }
-
             return img;
         }
 
         private long[] getGradValue(int[,] CalMat, int x, int y)
         {
-            long red = 0, green = 0, blue = 0;
+            long red = 0;
+            long green = 0;
+            long blue = 0;
             long[] pixel = new long[3];
 
-            // create a long array of 3 elements and put the red, green, blue gx or gy values and return the array
-            // Find the neighbours, keep track of corner cases and border cases
             int startx = (x - 1 != -1) ? x - 1 : x;
             int starty = (y - 1 != -1) ? y - 1 : y;
             int endx = (x + 1 < width) ? x + 1 : x;
-            int endy = (y + 1 < height) ? y + 1 : y;
+            int endy = (y + 1 < width) ? y + 1 : y;
 
             for (int i = startx, l = 0; i <= endx; i++, l++)
             {
@@ -349,10 +346,8 @@ namespace ImageProcessing
                     red = red + (CalMat[l, m] * this.myImage[i, j].red);
                     green = green + (CalMat[l, m] * this.myImage[i, j].green);
                     blue = blue + (CalMat[l, m] * this.myImage[i, j].blue);
-
                 }
             }
-
             pixel[0] = red;
             pixel[1] = green;
             pixel[2] = blue;
@@ -506,6 +501,6 @@ namespace ImageProcessing
         new int[] {74, 143, 122}
             })), "Incorrect Sobel:\n" + image2.sobelEdges());
         }
-        
+
     }
 }
