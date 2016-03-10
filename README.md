@@ -5,6 +5,10 @@ As part of the lecture offered by Kal from Kal academy, this project was provide
 
 Many thanks, Vishnu!
 
+## Place image file in the correct directory:
+
+Find an appropriate TIFF image to manipulate.  Place it in MyApp/bin/Debug (the same directory as MyApp.exe).  If you do not place your file here, even if you pass in a relative path so the program can locate your file, the program will error out because it cannot write the new file to the correct location.
+
 ## To blur an image:
 
 Open the Project > Properties window, and navigate to the Application tab.  Select the Blur file from the Startup Object menu.  This will tell VS to run the main() from that file.
